@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="JAPVOC - Interactive Japanese Language Learning Platform">
+    <meta name="theme-color" content="#4a90e2">
+    <title>JAPVOC - Japanese Language Learning</title>
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>JAPVOC</h1>
+                <p>Japanese Language Learning Platform</p>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li class="nav-item active">
+                        <button class="nav-tab" data-section="quiz">
+                            <span class="nav-icon">📝</span>
+                            <span class="nav-text">Quiz</span>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-tab" data-section="flashcards">
+                            <span class="nav-icon">🎴</span>
+                            <span class="nav-text">Flashcards</span>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-tab" data-section="kanji">
+                            <span class="nav-icon">漢</span>
+                            <span class="nav-text">Kanji</span>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-tab" data-section="grammar">
+                            <span class="nav-icon">📚</span>
+                            <span class="nav-text">Grammar</span>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-tab" data-section="listening">
+                            <span class="nav-icon">🎧</span>
+                            <span class="nav-text">Listening</span>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-tab" data-section="progress">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Progress</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+            <div class="theme-toggle">
+                <label class="theme-switch">
+                    <input type="checkbox" class="theme-checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Welcome Page -->
+            <section id="welcome-page" class="section welcome-section active">
+                <div class="welcome-content">
+                    <h2>Start Your Japanese Journey</h2>
+                    <p>Choose your learning path:</p>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <span class="feature-icon">📝</span>
+                            <h3>Quiz</h3>
+                            <p>Test your knowledge with various quiz formats</p>
+                            <button class="feature-btn" data-section="quiz">
+                                <span class="icon">🎯</span>
+                                Start Quiz
+                            </button>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🎴</span>
+                            <h3>Flashcards</h3>
+                            <p>Practice with interactive flashcards</p>
+                            <button class="feature-btn" data-section="flashcards">
+                                <span class="icon">🔄</span>
+                                Practice Now
+                            </button>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">漢</span>
+                            <h3>Kanji</h3>
+                            <p>Master Japanese characters</p>
+                            <button class="feature-btn" data-section="kanji">
+                                <span class="icon">✍️</span>
+                                Start Practice
+                            </button>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">📚</span>
+                            <h3>Grammar</h3>
+                            <p>Learn Japanese grammar rules</p>
+                            <button class="feature-btn" data-section="grammar">
+                                <span class="icon">📝</span>
+                                Start Learning
+                            </button>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🎧</span>
+                            <h3>Listening</h3>
+                            <p>Improve your listening skills</p>
+                            <button class="feature-btn" data-section="listening">
+                                <span class="icon">🔊</span>
+                                Start Listening
+                            </button>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">📊</span>
+                            <h3>Progress</h3>
+                            <p>Track your learning journey</p>
+                            <button class="feature-btn" data-section="progress">
+                                <span class="icon">📈</span>
+                                View Progress
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Learning Sections -->
+            <section id="quiz" class="section quiz-section">
+                <div class="section-header">
+                    <h2>Quiz</h2>
+                    <div class="quick-start">
+                        <button class="start-btn" data-section="quiz">
+                            <span class="icon">🎯</span>
+                            Start Quiz
+                        </button>
+                        <button class="start-btn" data-section="flashcards">
+                            <span class="icon">🎴</span>
+                            Flashcards
+                        </button>
+                        <button class="start-btn" data-section="kanji">
+                            <span class="icon">漢</span>
+                            Kanji
+                        </button>
+                    </div>
+                </div>
+                <div id="quiz-container" class="quiz-content">
+                    <!-- Quiz content will be dynamically inserted here -->
+                </div>
+                            <span class="icon">漢</span>
+                            Kanji Practice
+                        </button>
+                    </div>
+                </div>
+                <div class="quiz-container"></div>
+            </section>
+
+            <section id="flashcards" class="section flashcards-section">
+                <div class="section-header">
+                    <h2>Flashcards</h2>
+                    <div class="section-controls">
+                        <button class="start-flashcards">
+                            <span class="icon">🎴</span>
+                            Start Practice
+                        </button>
+                    </div>
+                </div>
+                <div class="flashcards-container"></div>
+            </section>
+
+            <section id="kanji" class="section kanji-section">
+                <div class="section-header">
+                    <h2>Kanji</h2>
+                    <div class="section-controls">
+                        <button class="start-kanji">
+                            <span class="icon">漢</span>
+                            Start Practice
+                        </button>
+                    </div>
+                </div>
+                <div class="kanji-container"></div>
+            </section>
+
+            <section id="grammar" class="section grammar-section">
+                <div class="section-header">
+                    <h2>Grammar</h2>
+                    <div class="section-controls">
+                        <button class="start-grammar">
+                            <span class="icon">📚</span>
+                            Start Learning
+                        </button>
+                    </div>
+                </div>
+                <div class="grammar-container"></div>
+            </section>
+
+            <section id="listening" class="section listening-section">
+                <div class="section-header">
+                    <h2>Listening</h2>
+                    <div class="section-controls">
+                        <button class="start-listening">
+                            <span class="icon">🎧</span>
+                            Start Practice
+                        </button>
+                    </div>
+                </div>
+                <div class="listening-container"></div>
+            </section>
+
+            <section id="progress" class="section progress-section">
+                <div class="section-header">
+                    <h2>Progress</h2>
+                </div>
+                <div class="progress-container"></div>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="./js/modules/init.js"></script>
+</body>
+</html>

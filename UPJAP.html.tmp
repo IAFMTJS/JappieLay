@@ -1,0 +1,3309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="JAPVOC - Interactive Japanese Language Learning Platform">
+    <meta name="theme-color" content="#4a90e2">
+    <title>JAPVOC - Japanese Language Learning</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="main-content">
+        <div id="welcome-page" class="section welcome-section active">
+            <div class="logo">JAPVOC</div>
+            <div class="welcome-content">
+                <h1>Japanese Vocabulary Learning</h1>
+                <p>Choose your learning path:</p>
+                <nav class="nav-tabs">
+                    <button class="nav-tab" data-section="quiz">Quiz</button>
+                    <button class="nav-tab" data-section="flashcards">Flashcards</button>
+                    <button class="nav-tab" data-section="kanji">Kanji</button>
+                    <button class="nav-tab" data-section="grammar">Grammar</button>
+                    <button class="nav-tab" data-section="listening">Listening</button>
+                    <button class="nav-tab" data-section="progress">Progress</button>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--primary-color);
+            color: white;
+            margin-top: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+    /* Reset and base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+      will-change: transform;
+    }
+
+    body {
+      margin: 0;
+      padding: 1rem;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: #ecf0f1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      line-height: 1.6;
+      will-change: background-color, color;
+      font-size: 16px;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      color: var(--secondary-color);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    h3 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--accent-color);
+    }
+
+    p {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Colors */
+    :root {
+      --primary-color: #1a232a;
+      --secondary-color: #4CAF50;
+      --accent-color: #388E3C;
+      --text-color: #ecf0f1;
+      --background-dark: #1a1a1a;
+      --background-light: #2d2d2d;
+      --shadow-color: rgba(0, 0, 0, 0.2);
+      --card-bg: rgba(0, 0, 0, 0.3);
+      --button-bg: rgba(76, 175, 80, 0.1);
+      --button-hover: rgba(76, 175, 80, 0.2);
+      --error-color: #f44336;
+      --success-color: #4CAF50;
+      --warning-color: #ff9800;
+      --info-color: #2196F3;
+    }
+
+    /* Optimize images */
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      opacity: 0;
+      will-change: opacity, transform;
+    }
+
+    img[loading="lazy"] {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    img[loading="lazy"]:not([data-loaded]) {
+      opacity: 0;
+    }
+
+    img[loading="lazy"][data-loaded] {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+
+    /* Section Styles */
+    .section {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1;
+      transform: translateY(20px);
+      will-change: opacity, visibility, transform;
+    }
+
+    .section.active {
+      opacity: 1;
+      visibility: visible;
+      display: block;
+      z-index: 2;
+      transform: translateY(0);
+    }
+
+    .welcome-section {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    .section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 16px;
+      background: linear-gradient(45deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+      opacity: 0.05;
+      pointer-events: none;
+    }
+
+    /* Welcome Page */
+    .welcome-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2.5rem;
+      padding: 4rem 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(20px);
+      will-change: opacity, visibility, transform;
+    }
+
+    .welcome-section.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .welcome-content {
+      text-align: center;
+      max-width: 600px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.1) 100%);
+      padding: 2rem;
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .welcome-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 900px;
+      padding: 1rem;
+    }
+
+    .welcome-buttons::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+      opacity: 0.05;
+      pointer-events: none;
+    }
+
+    .category-btn {
+      font-size: 1rem;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform, background-color;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category-btn:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #388E3C 0%, #2E7D32 100%);
+    }
+
+    .category-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .category-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .category-btn:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, var(--button-hover) 0%, rgba(76, 175, 80, 0.25) 100%);
+    }
+
+    .category-btn:hover::before {
+      opacity: 0.1;
+    }
+
+    .category-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px var(--shadow-color);
+    }
+
+    .category-btn.selected {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .category-btn.selected::before {
+      opacity: 0.3;
+    }
+
+    /* Global Styles */
+    .container {
+      width: 100%;
+      padding: 0 1rem;
+      max-width: 1200px;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--secondary-color);
+      margin-bottom: 1rem;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    p {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    /* Responsive Grid System */
+    .grid {
+      display: grid;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      width: 100%;
+    }
+
+    .grid-1 {
+      grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .grid-item {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.1) 100%);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .grid-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.85) 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+    }
+
+    .loading-overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid var(--secondary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--text-color);
+      border-top: 5px solid var(--secondary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      animation-play-state: paused;
+    }
+
+    .loading-overlay.active .loading-spinner {
+      animation-play-state: running;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Welcome Page */
+    #welcome-page {
+      text-align: center;
+      padding: 2rem 1rem;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .logo {
+      font-size: 4rem;
+      width: 100px;
+      height: 100px;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 900;
+      text-align: center;
+      line-height: 100px;
+    }
+
+    /* Flashcard Styles */
+    .flashcard-content {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: var(--card-bg);
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 6px var(--shadow-color);
+    }
+
+    .flashcard-text {
+      font-size: 1.5rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .flip-btn {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--button-bg);
+      color: white;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 4px var(--shadow-color);
+    }
+
+    .flip-btn:hover {
+      background: var(--button-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px var(--shadow-color);
+    }
+
+    .welcome-content {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 6px var(--shadow-color);
+    }
+
+    .welcome-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .welcome-btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--button-bg);
+      color: white;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 4px var(--shadow-color);
+    }
+
+    .welcome-btn:hover {
+      background: var(--button-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px var(--shadow-color);
+    }
+
+    .welcome-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px var(--shadow-color);
+    }
+
+    /* Mobile-specific styles */
+    @media (max-width: 768px) {
+      body {
+        padding: 0.5rem;
+      }
+
+      .welcome-content {
+        padding: 1rem;
+      }
+
+      .welcome-btn {
+        font-size: 0.9rem;
+        padding: 0.8rem;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+      }
+    }
+
+    /* Loading state */
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+      position: relative;
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid rgba(255, 255, 255, 0.2);
+      border-top: 6px solid #4CAF50;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+    }
+
+    /* Lazy loading */
+    .lazy-load {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .lazy-load.visible {
+      opacity: 1;
+    }
+
+    /* Error state */
+    .error {
+      color: #e74c3c;
+      border: 1px solid #e74c3c;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    
+    /* Error state */
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    /* Accessibility */
+    [aria-hidden="true"] {
+      display: none !important;
+    }
+    
+    /* Focus states */
+    button:focus,
+    input:focus,
+    select:focus {
+      outline: 2px solid #007BFF;
+      outline-offset: 2px;
+    }
+
+    /* Category buttons */
+    .category-btn {
+      background-color: #3071a9;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      width: 220px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      min-width: 120px;
+      cursor: pointer;
+    }
+
+    .category-btn:hover {
+      background-color: #0056b3;
+      transform: translateY(-1px);
+    }
+
+    .category-btn.selected {
+      background-color: #4CAF50;
+      border: 2px solid #4CAF50;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .category-btn.selected:hover {
+      background-color: #45a049;
+      transform: translateY(-2px);
+    }
+
+    .category-buttons-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+      padding: 10px;
+    }
+
+    /* Quiz buttons */
+    button {
+      font-size: 16px;
+      padding: 14px 24px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 280px;
+      height: 50px;
+      font-weight: 600;
+      line-height: 1.2;
+      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    button:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+      opacity: 0.7;
+      box-shadow: none;
+    }
+
+    /* Question container */
+    .question-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .question-container h3 {
+      color: #3071a9;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .question-container p {
+      font-size: 18px;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    /* Answer section */
+    .answer-section {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+      padding: 10px;
+    }
+
+    .option-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 1rem 0;
+      width: 100%;
+    }
+
+    .option-container input[type="radio"] {
+      width: 24px;
+      height: 24px;
+      margin-right: 1rem;
+      cursor: pointer;
+      accent-color: #4CAF50;
+    }
+
+    .option-label {
+      font-size: 18px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      border: 2px solid #e9ecef;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex: 1;
+    }
+
+    .option-label:hover {
+      background-color: #f1f3f5;
+      border-color: #d1d3d4;
+    }
+
+    .option-label:active {
+      background-color: #e9ecef;
+    }
+
+    .option-container.correct .option-label {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+    }
+
+    .option-container.correct .option-label:hover {
+      background-color: #c3e6cb;
+    }
+
+    .feedback {
+      font-size: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      min-width: 200px;
+      text-align: center;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .action-btn {
+      width: 200px;
+      font-size: 16px;
+      padding: 12px;
+      margin: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .action-btn:hover:not(:disabled) {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Settings group */
+    .settings-group {
+      margin: 15px 0;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .settings-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .settings-group select {
+      width: 200px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    
+    button:active:not(:disabled) {
+      transform: translateY(1px);
+      background-color: #0056b3;
+    }
+    button:disabled {
+      background-color: #aaa;
+      cursor: default;
+    }
+    #welcome-page button {
+      font-size: 20px;
+      padding: 15px 30px;
+      margin: 20px auto;
+      display: block;
+      min-width: 180px;
+      border-radius: 10px;
+      background-color: #004a99;
+      transition: background-color 0.3s ease;
+    }
+    #welcome-page button:hover {
+      background-color: #002f66;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 1rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      background-clip: padding-box;
+      -webkit-background-clip: padding-box;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .quiz-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 10px 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      background-clip: padding-box;
+      -webkit-background-clip: padding-box;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 1rem 0;
+      background: linear-gradient(to right, #4CAF50 0%, #4CAF50 var(--progress), #f44336 0%, #f44336 100%);
+      border-radius: 10px;
+      height: 20px;
+      width: 100%;
+      background-clip: padding-box;
+      -webkit-background-clip: padding-box;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      border-radius: 5px;
+      transition: width 0.3s ease;
+    }
+
+    /* Text styling */
+    h1, h2, h3 {
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    /* Timer styles */
+    .timer-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #timerDisplay {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      border-radius: 8px;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    #timerDisplay.low-time {
+      background-color: rgba(255, 0, 0, 0.2);
+      color: #ff0000;
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0.5rem 0;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+  </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+  <!-- Welcome Page -->
+  <div id="welcome-page" class="section welcome-section" role="region" aria-label="Welcome Page">
+    <div class="logo">JAPVOC</div>
+    <div class="welcome-content">
+      <h1>Japanese Vocabulary Learning</h1>
+      <p>Choose your learning path:</p>
+      <div class="welcome-buttons">
+        <button id="welcome-quiz-btn" class="category-btn" aria-label="Start Quiz">Quiz</button>
+        <button id="welcome-dictionary-btn" class="category-btn" aria-label="Open Dictionary">Dictionary</button>
+        <button id="welcome-grammar-btn" class="category-btn" aria-label="Open Grammar">Grammar</button>
+        <button id="welcome-realworld-btn" class="category-btn" aria-label="Real World Practice">Real World</button>
+        <button id="welcome-mobile-btn" class="category-btn" aria-label="Mobile Features">Mobile</button>
+        <button id="welcome-srs-btn" class="category-btn" aria-label="SRS Practice">SRS</button>
+      </div>
+    </div>
+
+    <div id="quiz-container" class="section quiz-section" role="region" aria-label="Quiz Section">
+      <header class="quiz-header">
+        <button id="backToStartBtn" aria-label="Return to welcome page">Back to Start</button>
+      </header>
+
+      <!-- Progress Page Section -->
+      <div id="progress-page" class="progress-section" style="display:none;" role="region" aria-label="Progress Tracking">
+        <h2>Your Progress</h2>
+        <div id="progress-info" role="status" aria-live="polite"></div>
+        <h3>Achievements</h3>
+        <ul id="achievementsList" role="list"></ul>
+        <h3>Words Due for Review (SRS)</h3>
+        <ul id="srsList" role="list"></ul>
+        <button id="backFromProgressBtn" aria-label="Return to welcome page">Back to Start</button>
+      </div>
+
+      <!-- Quiz Questions Section -->
+      <div id="quiz" class="quiz-questions-section" style="display:none;" role="region" aria-label="Quiz Questions">
+        <div class="quiz-info">
+          <div class="timer-container" role="status" aria-live="polite">
+            <span id="timer-display" role="timer" aria-label="Quiz timer">5:00</span>
+          </div>
+          <div class="difficulty-display">
+            <span>Difficulty:</span>
+            <span id="current-difficulty" class="difficulty-value" aria-label="Current difficulty level">Easy</span>
+          </div>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="question-container" role="group" aria-label="Current question">
+          <h3 id="question" role="heading" aria-level="3"></h3>
+          <div id="options" role="radiogroup" aria-label="Answer options"></div>
+          <div id="feedback" role="status" aria-live="polite"></div>
+          <button data-action="submit" class="quiz-btn" aria-label="Submit your answer">Submit Answer</button>
+
+            <!-- Listening Section -->
+            <section id="listening" class="section listening-section">
+                <div class="section-content">
+                    <h2>Listening</h2>
+                    <div class="listening-content">
+                        <!-- Listening content will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Progress Section -->
+            <section id="progress" class="section progress-section">
+                <div class="section-content">
+                    <h2>Progress</h2>
+                    <div class="progress-content">
+                        <!-- Progress content will be loaded here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About JAPVOC</h3>
+                    <p>JAPVOC is an interactive platform for learning Japanese language through practical exercises and real-world examples.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" data-action="startExercise">Start Exercise</a></li>
+                        <li><a href="#" data-action="showProgress">View Progress</a></li>
+                        <li><a href="#" data-action="openSettings">Settings</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <span class="icon-twitter"></span>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <span class="icon-github"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 JAPVOC. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <!-- Modals -->
+        <div id="helpModal" class="modal" role="dialog" aria-labelledby="helpModalTitle" aria-hidden="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="helpModalTitle">Help</h2>
+                    <button class="close-button" data-action="closeModal" data-modal="helpModal">
+                        <span class="icon-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="help-content">
+                        <h3>Keyboard Shortcuts</h3>
+                        <ul class="shortcut-list">
+                            <li><kbd>Tab</kbd> - Navigate through interactive elements</li>
+                            <li><kbd>Esc</kbd> - Close active elements</li>
+                            <li><kbd>F1</kbd> - Open help dialog</li>
+                        </ul>
+                        <h3>Accessibility Features</h3>
+                        <p>JAPVOC is designed with accessibility in mind. All interactive elements are keyboard accessible and include proper ARIA labels.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="settingsModal" class="modal" role="dialog" aria-labelledby="settingsModalTitle" aria-hidden="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="settingsModalTitle">Settings</h2>
+                    <button class="close-button" data-action="closeModal" data-modal="settingsModal">
+                        <span class="icon-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="settingsForm" class="settings-form">
+                        <div class="form-group">
+                            <label for="themeSelect">Theme</label>
+                            <select id="themeSelect" class="form-control">
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="fontSizeSelect">Font Size</label>
+                            <select id="fontSizeSelect" class="form-control">
+                                <option value="small">Small</option>
+                                <option value="medium">Medium</option>
+                                <option value="large">Large</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="languageSelect">Language</label>
+                            <select id="languageSelect" class="form-control">
+                                <option value="en">English</option>
+                                <option value="ja">日本語</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="switch">
+                                <input type="checkbox" id="notificationsToggle">
+                                <span class="slider"></span>
+                                Enable Notifications
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="switch">
+                                <input type="checkbox" id="audioToggle">
+                                <span class="slider"></span>
+                                Enable Audio Feedback
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="flashcardModal" class="modal" role="dialog" aria-labelledby="flashcardModalTitle" aria-hidden="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="flashcardModalTitle">Flashcard Review</h2>
+                    <button class="close-button" data-action="closeModal" data-modal="flashcardModal">
+                        <span class="icon-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="flashcard" class="flashcard">
+                        <!-- Flashcard content will be loaded here -->
+                    </div>
+                    <div class="flashcard-controls">
+                        <button id="flip-card" class="action-button">Flip</button>
+                        <button id="next-card" class="action-button">Next</button>
+                        <button id="mark-correct" class="action-button success">Correct</button>
+                        <button id="mark-wrong" class="action-button error">Wrong</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="errorModal" class="modal error-modal" role="dialog" aria-labelledby="errorModalTitle" aria-hidden="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="errorModalTitle">Error</h2>
+                    <button class="close-button" data-action="closeModal" data-modal="errorModal">
+                        <span class="icon-close"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="errorMessage" class="error-message"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Imports -->
+    <script type="module" src="js/modules/utils.js"></script>
+    <script type="module" src="js/modules/progress.js"></script>
+    <script type="module" src="js/modules/flashcards.js"></script>
+    <script type="module" src="js/modules/ui.js"></script>
+    <script type="module" src="js/app.js"></script>
+      <div id="score"></div>
+      <div id="time-taken"></div>
+      <button data-action="review" class="review-btn">Review Wrong Answers</button>
+      <button data-action="restart" class="review-btn">Restart Quiz</button>
+    </div>
+    <!-- Review Mode -->
+    <div id="review-mode" style="display:none;">
+      <nav>
+        <div class="logo">Japanese Learning</div>
+        <ul class="nav-links">
+          <li><a href="#" data-section="quiz">Quiz</a></li>
+          <li><a href="#" data-section="dictionary">Dictionary</a></li>
+          <li><a href="#" data-section="grammar">Grammar</a></li>
+          <li><a href="#" data-section="scoreboard">Scoreboard</a></li>
+          <li><a href="#" data-section="flashcards">Flashcards</a></li>
+          <li><a href="#" data-section="kanji">Kanji Practice</a></li>
+          <li><a href="#" data-section="listening">Listening Practice</a></li>
+        </ul>
+      </nav>
+      <h3>Review Wrong Answers</h3>
+      <div id="review-question"></div>
+      <div id="review-correct"></div>
+      <div id="review-user"></div>
+      <button data-action="prev-review" class="review-btn">Previous</button>
+      <button data-action="next-review" class="review-btn">Next</button>
+      <button data-action="end-review" class="review-btn">End Review</button>
+    </div>
+  </div>
+  <!-- Flashcards Page -->
+  <div id="flashcards-container" style="display:none;" role="region" aria-label="Flashcards">
+    <nav>
+      <div class="logo">Japanese Learning</div>
+      <ul class="nav-links">
+        <li><a href="#" data-section="quiz">Quiz</a></li>
+        <li><a href="#" data-section="dictionary">Dictionary</a></li>
+        <li><a href="#" data-section="grammar">Grammar</a></li>
+        <li><a href="#" data-section="scoreboard">Scoreboard</a></li>
+        <li><a href="#" data-section="flashcards">Flashcards</a></li>
+        <li><a href="#" data-section="kanji">Kanji Practice</a></li>
+        <li><a href="#" data-section="listening">Listening Practice</a></li>
+      </ul>
+    </nav>
+    <div id="flashcard-container" role="region" aria-label="Flashcard">
+      <!-- Flashcard content will be rendered here -->
+    </div>
+  </div>
+  <!-- Dictionary Page -->
+  <div id="dictionary-container" style="display:none;" role="region" aria-label="Dictionary">
+    <nav>
+      <div class="logo">Japanese Learning</div>
+      <div class="nav-buttons">
+        <button id="dictionary-home" aria-label="Return to welcome page">Home</button>
+      </div>
+    </nav>
+    <div class="dictionary-search">
+      <input type="text" id="dictionary-search-input" placeholder="Search words..." aria-label="Search dictionary">
+      <button id="dictionary-search-button" aria-label="Search">Search</button>
+    </div>
+    <h2>Dictionary</h2>
+    <div id="dictionaryResults"></div>
+  </div>
+  <!-- Grammar Page -->
+  <div id="grammar-container" style="display:none;">
+    <h2>Grammar</h2>
+    <div id="grammarContent"></div>
+  </div>
+  <!-- Scoreboard -->
+  <div id="scoreboard" style="display:none;">
+    <h2>Scoreboard</h2>
+    <div id="scoreboard-content"></div>
+  </div>
+
+  <!-- Flashcards -->
+  <div id="flashcards" style="display:none;">
+    <h2>Vocabulary Flashcards</h2>
+    <div class="flashcard-controls">
+      <select id="flashcardCategory">
+        <option value="all">All Categories</option>
+        <option value="colors">Colors</option>
+        <option value="bodyparts">Body Parts</option>
+      </select>
+      <button id="startFlashcards">Start Practice</button>
+    </div>
+    <div id="flashcard-container" style="display:none;">
+      <div class="flashcard">
+        <div class="flashcard-front" id="flashcardFront"></div>
+        <div class="flashcard-back" id="flashcardBack"></div>
+      </div>
+      <div class="flashcard-controls">
+        <button id="showAnswer">Show Answer</button>
+        <button id="nextCard">Next Card</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kanji Practice -->
+  <div id="kanji-container" class="section" style="display:none;">
+    <h2>Kanji Practice</h2>
+    <div class="kanji-controls">
+      <select id="kanji-level">
+        <option value="1">N5</option>
+        <option value="2">N4</option>
+        <option value="3">N3</option>
+      </select>
+      <button id="start-kanji">Start Practice</button>
+    </div>
+    <div class="kanji-practice" style="display:none;">
+      <div class="kanji-display">
+        <div class="kanji-character" id="kanji-char"></div>
+        <div class="kanji-meaning" id="kanji-meaning"></div>
+        <div class="kanji-stroke-order" id="kanji-stroke"></div>
+      </div>
+      <div class="kanji-controls">
+        <button id="next-kanji">Next Kanji</button>
+        <button id="show-stroke">Show Stroke Order</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Listening Practice -->
+  <div id="listening-container" class="section" style="display:none;">
+    <h2>Listening Practice</h2>
+    <div class="listening-controls">
+      <select id="listening-level">
+        <option value="beginner">Beginner</option>
+        <option value="intermediate">Intermediate</option>
+        <option value="advanced">Advanced</option>
+      </select>
+      <button id="start-listening">Start Practice</button>
+</script>
+</body>
+</html>
+                advanced: { interval: 7, multiplier: 3 }
+            };
+
+            if (correctCount < 3) {
+                return levels.beginner;
+            } else if (correctCount < 7) {
+                return levels.intermediate;
+            } else {
+                return levels.advanced;
+            }
+        },
+        renderCard: function() {
+            const cardContainer = document.getElementById('flashcard-container');
+            if (!cardContainer || !this.state.currentCard) return;
+
+            const content = this.state.currentSide === 'front' 
+                ? this.state.currentCard.word 
+                : `${this.state.currentCard.reading}\n${this.state.currentCard.meaning}`;
+
+            cardContainer.innerHTML = `
+                <div class="flashcard-content">
+                    <div class="flashcard-text">${content}</div>
+                    <button id="flip-btn" class="flip-btn">Flip</button>
+                    ${this.state.reviewMode ? `
+                        <button id="mark-correct">Correct</button>
+                        <button id="mark-wrong">Wrong</button>
+                    ` : ''}
+                    <button id="next-card">Next</button>
+                    <button id="review-mode">${this.state.reviewMode ? 'Exit Review' : 'Review Mode'}</button>
+                </div>
+            `;
+
+            // Setup event listeners for buttons
+            const flipButton = document.getElementById('flip-btn');
+            const nextButton = document.getElementById('next-card');
+            const reviewButton = document.getElementById('review-mode');
+            const correctButton = document.getElementById('mark-correct');
+            const wrongButton = document.getElementById('mark-wrong');
+
+            if (flipButton) {
+                flipButton.addEventListener('click', () => {
+                    this.state.currentSide = this.state.currentSide === 'front' ? 'back' : 'front';
+                    this.renderCard();
+                });
+            }
+
+            if (nextButton) {
+                nextButton.addEventListener('click', () => {
+                    this.nextCard();
+                });
+            }
+
+            if (reviewButton) {
+                reviewButton.addEventListener('click', () => {
+                    this.state.reviewMode = !this.state.reviewMode;
+                    this.renderCard();
+                });
+            }
+
+            if (correctButton) {
+                correctButton.addEventListener('click', () => {
+                    this.markCard('correct');
+                });
+            }
+
+            if (wrongButton) {
+                wrongButton.addEventListener('click', () => {
+                    this.markCard('wrong');
+                });
+            }
+        },
+        startReview() {
+            this.state.reviewMode = true;
+            this.state.currentIndex = 0;
+            this.state.currentCard = this.state.currentDeck[0];
+            this.state.currentSide = 'front';
+            this.renderCard();
+        }
+    },
+    Kanji: {
+        state: {
+            initialized: false,
+            currentLevel: 'beginner',
+            kanjiList: [],
+            currentKanji: null,
+            currentStroke: 0,
+            showStrokes: false,
+            kanjiCategories: {
+                'beginner': { range: [1, 80], name: 'Beginner (1-80)' },
+                'intermediate': { range: [81, 160], name: 'Intermediate (81-160)' },
+                'advanced': { range: [161, 226], name: 'Advanced (161-226)' }
+            }
+        },
+        initialize() {
+            this.state.initialized = true;
+            this.loadKanjiList();
+            this.setupEventListeners();
+        },
+        loadKanjiList() {
+            // Load kanji list from localStorage or initialize with defaults
+            const savedKanji = localStorage.getItem('japVocKanji');
+            if (savedKanji) {
+                this.state.kanjiList = JSON.parse(savedKanji);
+            } else {
+                this.state.kanjiList = [
+                    {
+                        id: 1,
+                        character: '一',
+                        readings: ['ichi', 'hitotsu'],
+                        meaning: 'one',
+                        strokes: 1,
+                        strokeOrder: ['horizontal'],
+                        level: 'beginner',
+                        learned: false,
+                        correctCount: 0,
+                        wrongCount: 0
+                    },
+                    {
+                        id: 2,
+                        character: '二',
+                        readings: ['ni', 'futatsu'],
+                        meaning: 'two',
+                        strokes: 2,
+                        strokeOrder: ['horizontal', 'horizontal'],
+                        level: 'beginner',
+                        learned: false,
+                        correctCount: 0,
+                        wrongCount: 0
+                    },
+                    // Add more kanji here
+                ];
+            }
+        },
+        setupEventListeners() {
+            const levelSelect = document.getElementById('kanjiLevel');
+            const showStrokesToggle = document.getElementById('showStrokes');
+            const practiceButton = document.getElementById('kanjiPractice');
+            const quizButton = document.getElementById('kanjiQuiz');
+
+            if (levelSelect) {
+                levelSelect.addEventListener('change', (e) => {
+                    this.state.currentLevel = e.target.value;
+                    this.renderKanjiList();
+                });
+            }
+
+            if (showStrokesToggle) {
+                showStrokesToggle.addEventListener('change', (e) => {
+                    this.state.showStrokes = e.target.checked;
+                    this.renderKanjiDetails();
+                });
+            }
+
+            if (practiceButton) {
+                practiceButton.addEventListener('click', () => {
+                    this.startPractice();
+                });
+            }
+
+            if (quizButton) {
+                quizButton.addEventListener('click', () => {
+                    this.startQuiz();
+                });
+            }
+        },
+        renderKanjiList() {
+            const kanjiContainer = document.getElementById('kanjiList');
+            if (!kanjiContainer) return;
+
+            const currentLevelRange = this.state.kanjiCategories[this.state.currentLevel].range;
+            const levelKanji = this.state.kanjiList.filter(k => 
+                k.id >= currentLevelRange[0] && k.id <= currentLevelRange[1]
+            );
+
+            const kanjiCards = levelKanji.map(kanji => {
+                return {
+                    id: kanji.id,
+                    character: kanji.character,
+                    strokes: kanji.strokes,
+                    reading: kanji.readings[0],
+                    meaning: kanji.meaning
+                };
+            });
+                    </div>
+                    <div class="kanjiProgress">
+                        <span>Correct: ${kanji.correctCount}</span>
+                        <span>Wrong: ${kanji.wrongCount}</span>
+                    </div>
+                </div>
+            `).join('');
+        },
+        showKanjiDetails(id) {
+            const kanji = this.state.kanjiList.find(k => k.id === id);
+            if (!kanji) return;
+
+            this.state.currentKanji = kanji;
+            this.state.currentStroke = 0;
+            this.renderKanjiDetails();
+        },
+        renderKanjiDetails() {
+            const detailsContainer = document.getElementById('kanjiDetails');
+            if (!detailsContainer || !this.state.currentKanji) return;
+
+            const strokeOrder = this.state.showStrokes 
+                ? this.state.currentKanji.strokeOrder.map((stroke, index) => `
+                    <div class="strokeStep">
+                        <span>Stroke ${index + 1}</span>
+                        <div class="strokePreview" data-stroke="${stroke}"></div>
+                    </div>
+                `).join('') 
+                : '';
+
+            detailsContainer.innerHTML = `
+                <div class="kanjiDetailView">
+                    <div class="kanjiCharacterLarge">${this.state.currentKanji.character}</div>
+                    <div class="kanjiInfoDetail">
+                        <p><strong>Readings:</strong> ${this.state.currentKanji.readings.join(', ')}</p>
+                        <p><strong>Meaning:</strong> ${this.state.currentKanji.meaning}</p>
+                        <p><strong>Strokes:</strong> ${this.state.currentKanji.strokes}</p>
+                    </div>
+                    ${this.state.showStrokes ? `
+                        <div class="strokeOrder">
+                            <h3>Stroke Order</h3>
+                            ${strokeOrder}
+                        </div>
+                    ` : ''}
+                    <div class="kanjiProgressDetail">
+                        <button onclick="App.Kanji.startPractice()">Practice Writing</button>
+                        <button onclick="App.Kanji.startQuiz()">Start Quiz</button>
+                    </div>
+                </div>
+            `;
+        },
+        startPractice() {
+            if (!this.state.currentKanji) return;
+
+            const practiceContainer = document.getElementById('kanjiPractice');
+            if (!practiceContainer) return;
+
+            practiceContainer.innerHTML = `
+                <div class="kanjiPracticeView">
+                    <div class="kanjiCharacterPractice">${this.state.currentKanji.character}</div>
+                    <div class="practiceArea">
+                        <canvas id="writingCanvas"></canvas>
+                    </div>
+                    <div class="practiceControls">
+                        <button onclick="App.Kanji.clearCanvas()">Clear</button>
+                        <button onclick="App.Kanji.checkPractice()">Check</button>
+                        <button onclick="App.Kanji.nextKanji()">Next</button>
+                    </div>
+                </div>
+            `;
+
+            this.setupCanvas();
+        },
+        setupCanvas() {
+            const canvas = document.getElementById('writingCanvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            canvas.width = 400;
+            canvas.height = 400;
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 5;
+
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDrawing) return;
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            });
+
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+            canvas.addEventListener('mouseout', () => isDrawing = false);
+        },
+        clearCanvas() {
+            const canvas = document.getElementById('writingCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        },
+        checkPractice() {
+            // TODO: Implement practice checking logic
+            // This would involve comparing the drawn strokes with the correct stroke order
+            alert('Practice checking not yet implemented');
+        },
+        nextKanji() {
+            const currentLevelRange = this.state.kanjiCategories[this.state.currentLevel].range;
+            const currentKanjiIndex = this.state.kanjiList.findIndex(k => 
+                k.id === this.state.currentKanji.id
+            );
+
+            const nextKanji = this.state.kanjiList.find((k, index) => 
+                index > currentKanjiIndex && 
+                k.id >= currentLevelRange[0] && 
+                k.id <= currentLevelRange[1]
+            );
+
+            if (nextKanji) {
+                this.state.currentKanji = nextKanji;
+                this.clearCanvas();
+                this.renderKanjiDetails();
+            }
+        },
+        startQuiz() {
+            const quizContainer = document.getElementById('kanjiQuiz');
+            if (!quizContainer) return;
+
+            const currentLevelRange = this.state.kanjiCategories[this.state.currentLevel].range;
+            const levelKanji = this.state.kanjiList.filter(k => 
+                k.id >= currentLevelRange[0] && k.id <= currentLevelRange[1]
+            );
+
+            const quizKanji = levelKanji[Math.floor(Math.random() * levelKanji.length)];
+            this.state.currentKanji = quizKanji;
+
+            quizContainer.innerHTML = `
+                <div class="kanjiQuizView">
+                    <div class="kanjiCharacterQuiz">${quizKanji.character}</div>
+                    <div class="quizOptions">
+                        <input type="text" id="kanjiAnswer" placeholder="Enter reading">
+                        <button onclick="App.Kanji.checkQuiz()">Submit</button>
+                    </div>
+                    <div class="quizControls">
+                        <button onclick="App.Kanji.nextQuiz()">Skip</button>
+                    </div>
+                </div>
+            `;
+        },
+        checkQuiz() {
+            const answerInput = document.getElementById('kanjiAnswer');
+            if (!answerInput) return;
+
+            const userAnswer = answerInput.value.toLowerCase();
+            const correctReading = this.state.currentKanji.readings[0].toLowerCase();
+
+            if (userAnswer === correctReading) {
+                this.state.currentKanji.correctCount++;
+                alert('Correct!');
+            } else {
+                this.state.currentKanji.wrongCount++;
+                alert(`Incorrect. The correct reading is: ${correctReading}`);
+            }
+
+            this.saveProgress();
+            this.nextQuiz();
+        },
+        saveProgress() {
+            localStorage.setItem('japVocKanji', JSON.stringify(this.state.kanjiList));
+        }
+    },
+    UI: {
+        state: {
+            initialized: false,
+            currentSection: null,
+            currentTopic: null
+        },
+        initialize: function() {
+            console.log('Initializing UI');
+            this.state.initialized = true;
+            this.state.currentSection = 'welcome';
+
+            // Initialize all modules first
+            Object.keys(JAPVOC).forEach(moduleName => {
+                const module = JAPVOC[moduleName];
+                if (module && module.initialize) {
+                    module.initialize();
+                }
+            });
+
+            // Setup welcome page button listeners
+            const welcomeButtons = {
+                'welcome-quiz-btn': 'quiz',
+                'welcome-dictionary-btn': 'dictionary',
+                'welcome-grammar-btn': 'grammar',
+                'welcome-scoreboard-btn': 'scoreboard',
+                'welcome-progress-btn': 'progress',
+                'welcome-flashcards-btn': 'flashcards',
+                'welcome-kanji-btn': 'kanji',
+                'welcome-listening-btn': 'listening'
+            };
+
+            Object.entries(welcomeButtons).forEach(([buttonId, section]) => {
+                const button = document.getElementById(buttonId);
+                if (button) {
+                    button.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.showSection(section);
+                    });
+                    
+                    // Add ARIA attributes
+                    button.setAttribute('aria-label', `Go to ${section} section`);
+                    button.setAttribute('role', 'button');
+                    button.setAttribute('tabindex', '0');
+                }
+            });
+
+            // Add keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const focusableElements = document.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                    const currentFocus = document.activeElement;
+                    const currentIndex = Array.from(focusableElements).indexOf(currentFocus);
+                    
+                    if (e.shiftKey) {
+                        focusableElements[Math.max(0, currentIndex - 1)].focus();
+                    } else {
+                        focusableElements[Math.min(focusableElements.length - 1, currentIndex + 1)].focus();
+                    }
+                }
+            });
+
+            // Show welcome page by default
+            this.showWelcome();
+        },
+        showSection: function(section) {
+            console.log('Showing section:', section);
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(s => {
+                s.classList.remove('active');
+                s.setAttribute('aria-hidden', 'true');
+                s.setAttribute('tabindex', '-1');
+                s.style.display = 'none'; // Ensure display is set to none
+            });
+
+            const targetSection = document.querySelector(`[data-section="${section}"]`);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                targetSection.setAttribute('aria-hidden', 'false');
+                targetSection.removeAttribute('tabindex');
+                targetSection.style.display = 'block';
+                this.state.currentSection = section;
+                
+                // Focus management
+                const focusableElements = targetSection.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                if (focusableElements.length > 0) {
+                    focusableElements[0].focus();
+                }
+
+                // Initialize section-specific content
+                switch (section) {
+                    case 'kanji':
+                        JAPVOC.Kanji.loadKanjiList();
+                        break;
+                    case 'listening':
+                        JAPVOC.Listening.loadListeningContent();
+                        break;
+                    case 'progress':
+                        JAPVOC.Progress.renderProgress();
+                        break;
+                }
+            }
+        },
+        showWelcome: function() {
+            this.showSection('welcome');
+        }
+    },
+    /**
+            /**
+ * Quiz module handles all quiz-related functionality
+ * @namespace
+ */
+Quiz: {
+    /**
+     * Quiz state management
+     * @type {Object}
+     */
+    state: {
+        /**
+         * Indicates if the quiz module is initialized
+         * @type {boolean}
+         */
+        initialized: false,
+        /**
+         * Array of quiz questions
+         * @type {Array<Object>}
+         */
+        questions: [],
+        /**
+         * Current question index
+         * @type {number}
+         */
+        currentQuestionIndex: 0,
+        /**
+         * Current quiz score
+         * @type {number}
+         */
+        score: {
+            correct: 0,
+            wrong: 0
+        },
+        /**
+         * Time limit for each question in seconds
+         * @type {number}
+         */
+        timeLimit: 30,
+        /**
+         * Timer object
+         * @type {Object|null}
+         */
+        timer: null,
+        /**
+         * Current question data
+         * @type {Object|null}
+         */
+        currentQuestionData: null,
+        /**
+         * Indicates if the quiz is loading
+         * @type {boolean}
+         */
+        isLoading: false,
+        /**
+         * Indicates if an error occurred
+         * @type {boolean}
+         */
+        hasError: false,
+        /**
+         * Error message
+         * @type {string}
+         */
+        errorMessage: '',
+        /**
+         * Number of retries
+         * @type {number}
+         */
+        retryCount: 0,
+        /**
+         * Maximum number of retries
+         * @type {number}
+         */
+        maxRetries: 3,
+        /**
+         * Offline support
+         * @type {boolean}
+         */
+        isOffline: false,
+        /**
+         * Last sync time
+         * @type {number}
+         */
+        lastSync: null,
+        /**
+         * Sync interval
+         * @type {number}
+         */
+        syncInterval: 5 * 60 * 1000, // 5 minutes
+        /**
+         * Analytics data
+         * @type {Object}
+         */
+        analytics: {
+            startTime: null,
+            endTime: null,
+            totalTime: 0,
+            questionTimes: [],
+            hintUsage: 0,
+            retries: 0,
+            userActions: [],
+            events: []
+        },
+        /**
+         * Cached elements
+         * @type {Object}
+         */
+        elements: {
+            question: null,
+            options: null,
+            progress: null,
+            score: null,
+            buttons: {
+                next: null,
+                hint: null,
+                start: null,
+                home: null
+            }
+        }
+    },
+    /**
+     * Initializes the quiz module
+     * @function
+     * @returns {void}
+     */
+    initialize() {
+        try {
+            this.state.initialized = true;
+            this.state.isLoading = true;
+            this.state.hasError = false;
+            
+            // Setup CSP
+            this.setupCSP();
+            
+            // Setup analytics
+            this.setupAnalytics();
+            
+            // Setup offline support
+            this.setupOfflineSupport();
+            
+            // Load saved state
+            this.loadSavedState();
+            
+            this.loadQuizData();
+            this.setupEventListeners();
+            
+            // Cache DOM elements
+            this.cacheElements();
+            
+            // Clone and insert quiz template
+            const template = document.getElementById('quiz-template');
+            if (template) {
+                const quizSection = document.getElementById('quiz');
+                if (quizSection) {
+                    quizSection.appendChild(template.content.cloneNode(true));
+                }
+            }
+            
+            this.state.isLoading = false;
+        } catch (error) {
+            this.handleError(error, 'Failed to initialize quiz');
+        }
+    },
+    
+    setupCSP() {
+        try {
+            // Generate nonce for CSP
+            const nonce = this.generateNonce();
+            
+            // Update all script and style elements with nonce
+            const scripts = document.querySelectorAll('script[nonce="${nonce}"]');
+            const styles = document.querySelectorAll('style[nonce="${nonce}"]');
+            
+            Array.from(scripts).forEach(script => {
+                script.setAttribute('nonce', nonce);
+            });
+            
+            Array.from(styles).forEach(style => {
+                style.setAttribute('nonce', nonce);
+            });
+            
+            // Add CSP violation event handler
+            window.addEventListener('error', (e) => {
+                if (e instanceof SecurityPolicyViolationEvent) {
+                    this.handleCSPViolation(e);
+                }
+            });
+            
+        } catch (error) {
+            console.error('Error setting up CSP:', error);
+        }
+    },
+    
+    generateNonce() {
+        // Generate a cryptographically secure nonce
+        return crypto.randomUUID();
+    },
+    
+    handleCSPViolation(violation) {
+        try {
+            const report = {
+                documentURI: violation.documentURI,
+                violatedDirective: violation.violatedDirective,
+                effectiveDirective: violation.effectiveDirective,
+                originalPolicy: violation.originalPolicy,
+                blockedURI: violation.blockedURI,
+                statusCode: violation.statusCode,
+                timestamp: Date.now()
+            };
+            
+            // Send report to server
+            fetch('/csp-report-endpoint/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(report)
+            }).catch(error => {
+                console.error('Failed to send CSP report:', error);
+                // Fallback to console logging if server report fails
+                console.error('CSP Violation:', report);
+            });
+            
+            // Handle specific violations
+            switch (violation.violatedDirective) {
+                case 'script-src':
+                    console.error('Script CSP violation:', violation);
+                    break;
+                case 'style-src':
+                    console.error('Style CSP violation:', violation);
+                    break;
+                default:
+                    console.error('CSP violation:', violation);
+            }
+            
+        } catch (error) {
+            console.error('Error handling CSP violation:', error);
+        }
+    }
+    
+    setupAnalytics() {
+        // Initialize analytics
+        this.state.analytics.startTime = Date.now();
+        this.state.analytics.questionTimes = new Array(this.state.questions.length).fill(0);
+        
+        // Add event listeners for analytics
+        window.addEventListener('beforeunload', () => this.sendAnalytics());
+        
+        // Track user actions
+        this.trackEvent('quiz_start');
+    },
+    
+    trackEvent(eventType, data = {}) {
+        const event = {
+            type: eventType,
+            timestamp: Date.now(),
+            data: data
+        };
+        this.state.analytics.events.push(event);
+        
+        // Send analytics in real-time if possible
+        if (!this.state.isOffline) {
+            this.sendAnalyticsEvent(event);
+        }
+    },
+    
+    sendAnalyticsEvent(event) {
+        try {
+            // This would be your actual analytics API call
+            // fetch('/api/analytics', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify(event)
+            // });
+            
+            // For now, just log the event
+            console.log('Analytics event:', event);
+        } catch (error) {
+            console.error('Error sending analytics event:', error);
+        }
+    },
+    
+    sendAnalytics() {
+        try {
+            // Calculate total time
+            this.state.analytics.endTime = Date.now();
+            this.state.analytics.totalTime = this.state.analytics.endTime - this.state.analytics.startTime;
+            
+            // Get question statistics
+            const questionStats = this.state.analytics.questionTimes.map((time, index) => ({
+                questionIndex: index,
+                timeTaken: time,
+                correct: this.state.questions[index].correctAnswer === this.state.currentQuestionData.correctAnswer
+            }));
+            
+            // Prepare analytics data
+            const analyticsData = {
+                startTime: this.state.analytics.startTime,
+                endTime: this.state.analytics.endTime,
+                totalTime: this.state.analytics.totalTime,
+                questions: questionStats,
+                score: this.state.score,
+                hintUsage: this.state.analytics.hintUsage,
+                retries: this.state.analytics.retries,
+                userActions: this.state.analytics.userActions,
+                events: this.state.analytics.events
+            };
+            
+            // Send analytics data
+            if (!this.state.isOffline) {
+                this.sendAnalyticsData(analyticsData);
+            } else {
+                // Save analytics data locally until we can sync
+                localStorage.setItem('quizAnalytics', JSON.stringify(analyticsData));
+            }
+        } catch (error) {
+            console.error('Error sending analytics:', error);
+        }
+    },
+    
+    sendAnalyticsData(data) {
+        try {
+            // This would be your actual analytics API call
+            // fetch('/api/analytics/session', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify(data)
+            // });
+            
+            // For now, just log the data
+            console.log('Analytics data:', data);
+        } catch (error) {
+            console.error('Error sending analytics data:', error);
+        }
+    },
+    
+    setupOfflineSupport() {
+        // Check for offline support
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(error => {
+                    console.error('Service Worker registration failed:', error);
+                });
+        }
+
+        // Add online/offline event listeners
+        window.addEventListener('online', () => this.handleOnline());
+        window.addEventListener('offline', () => this.handleOffline());
+
+        // Start sync interval
+        this.startSyncInterval();
+    },
+    
+    handleOnline() {
+        this.state.isOffline = false;
+        this.syncData();
+    },
+    
+    handleOffline() {
+        this.state.isOffline = true;
+        this.saveState();
+    },
+    
+    startSyncInterval() {
+        this.state.syncIntervalId = setInterval(() => {
+            if (!this.state.isOffline) {
+                this.syncData();
+            }
+        }, this.state.syncInterval);
+    },
+    
+    stopSyncInterval() {
+        if (this.state.syncIntervalId) {
+            clearInterval(this.state.syncIntervalId);
+        }
+    },
+    
+    cacheElements() {
+        // Cache question and options
+        this.state.elements.question = document.getElementById('question');
+        this.state.elements.options = document.querySelectorAll('[data-option]');
+        
+        // Cache progress and score
+        this.state.elements.progress = document.getElementById('quizProgress');
+        this.state.elements.score = document.getElementById('quizScore');
+        
+        // Cache buttons
+        this.state.elements.buttons.next = document.getElementById('nextQuestion');
+        this.state.elements.buttons.hint = document.getElementById('quiz-hint');
+        this.state.elements.buttons.start = document.getElementById('startQuiz');
+        this.state.elements.buttons.home = document.getElementById('quiz-home');
+    },
+    /**
+     * Loads quiz data from localStorage or initializes with defaults
+     * @function
+     * @returns {void}
+     */
+    loadQuizData() {
+        try {
+            this.state.isLoading = true;
+            
+            // Try to load from localStorage first
+            const savedState = localStorage.getItem('quizState');
+            if (savedState) {
+                try {
+                    const state = JSON.parse(savedState);
+                    if (state.questions && Array.isArray(state.questions)) {
+                        // Validate question format
+                        const isValid = state.questions.every(question => 
+                            typeof question === 'object' &&
+                            typeof question.question === 'string' &&
+                            Array.isArray(question.options) &&
+                            question.options.length > 0 &&
+                            typeof question.correctAnswer === 'string'
+                        );
+                        
+                        if (isValid) {
+                            this.state.questions = state.questions;
+                            this.state.currentQuestionIndex = state.currentQuestionIndex || 0;
+                            this.state.score = state.score || { correct: 0, wrong: 0 };
+                            this.state.timeLimit = state.timeLimit || 30;
+                            this.state.currentQuestionData = state.currentQuestionData;
+                        } else {
+                            console.warn('Invalid question format in saved state');
+                            this.loadDefaultQuestions();
+                        }
+                    }
+                } catch (parseError) {
+                    console.error('Error parsing saved state:', parseError);
+                    this.loadDefaultQuestions();
+                }
+            } else {
+                this.loadDefaultQuestions();
+            }
+            
+            this.state.isLoading = false;
+        } catch (error) {
+            this.handleError(error, 'Failed to load quiz data');
+            this.loadDefaultQuestions();
+        }
+    },
+    
+    loadDefaultQuestions() {
+        try {
+            this.state.questions = [
+                {
+                    question: 'What is the Japanese word for "hello"?',
+                    options: ['こんにちは', 'さようなら', 'ありがとう', 'はい'],
+                    correctAnswer: 'こんにちは',
+                    hint: 'This is the most common greeting in Japanese'
+                },
+                {
+                    question: 'What does "はい" mean?',
+                    options: ['Yes', 'No', 'Maybe', 'Hello'],
+                    correctAnswer: 'Yes',
+                    hint: 'This is a common response word in Japanese'
+                }
+                // Add more default questions here
+            ];
+            this.state.currentQuestionIndex = 0;
+            this.state.score = { correct: 0, wrong: 0 };
+            this.state.timeLimit = 30;
+            this.state.currentQuestionData = this.state.questions[0];
+        } catch (error) {
+            console.error('Error loading default questions:', error);
+            this.handleError(error, 'Failed to load default questions');
+        }
+    },
+    
+    saveState() {
+        try {
+            const state = {
+                questions: this.state.questions,
+                currentQuestionIndex: this.state.currentQuestionIndex,
+                score: this.state.score,
+                timeLimit: this.state.timeLimit,
+                currentQuestionData: this.state.currentQuestionData
+            };
+            localStorage.setItem('quizState', JSON.stringify(state));
+        } catch (error) {
+            console.error('Error saving state:', error);
+        }
+    },
+    
+    syncData() {
+        try {
+            // Only sync if we have internet connection
+            if (this.state.isOffline) return;
+            
+            // Get saved state
+            const savedState = localStorage.getItem('quizState');
+            if (!savedState) return;
+            
+            const state = JSON.parse(savedState);
+            
+            // Sync with server (this would be your actual API call)
+            // fetch('/api/quiz/sync', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify(state)
+            // })
+            // .then(response => {
+            //     if (response.ok) {
+            //         this.state.lastSync = Date.now();
+            //         // Clear local storage if sync was successful
+            //         localStorage.removeItem('quizState');
+            //     }
+            // });
+            
+            // For now, just update last sync time
+            this.state.lastSync = Date.now();
+        } catch (error) {
+            console.error('Error syncing data:', error);
+        }
+    },
+    /**
+     * Sets up event listeners for quiz interactions
+     * @function
+     * @returns {void}
+     */
+    setupEventListeners() {
+        try {
+            // Cache elements
+            this.cacheElements();
+            
+            // Add event listeners for buttons with ARIA attributes
+            const nextButton = this.state.elements.buttons.next;
+            const hintButton = this.state.elements.buttons.hint;
+            const startButton = this.state.elements.buttons.start;
+            const homeButton = this.state.elements.buttons.home;
+            
+            if (nextButton) {
+                nextButton.addEventListener('click', () => this.nextQuestion());
+                nextButton.setAttribute('aria-label', 'Next question');
+                nextButton.setAttribute('aria-keyshortcuts', 'ArrowRight');
+            }
+            
+            if (hintButton) {
+                hintButton.addEventListener('click', () => this.showHint());
+                hintButton.setAttribute('aria-label', 'Show hint');
+                hintButton.setAttribute('aria-keyshortcuts', 'h');
+            }
+            
+            if (startButton) {
+                startButton.addEventListener('click', () => this.startQuiz());
+                startButton.setAttribute('aria-label', 'Start quiz');
+                startButton.setAttribute('aria-keyshortcuts', 's');
+            }
+            
+            if (homeButton) {
+                homeButton.addEventListener('click', () => this.showWelcome());
+                homeButton.setAttribute('aria-label', 'Return to home');
+                homeButton.setAttribute('aria-keyshortcuts', 'Escape');
+            }
+            
+            // Add event listeners for options with ARIA attributes
+            const options = document.querySelectorAll('[data-option]');
+            options.forEach((option, index) => {
+                option.addEventListener('click', (e) => this.selectOption(option.dataset.option));
+                option.setAttribute('role', 'option');
+                option.setAttribute('aria-selected', 'false');
+                option.setAttribute('tabindex', '-1');
+                option.setAttribute('aria-label', `Option ${index + 1}`);
+            });
+            
+            // Add keyboard navigation with focus management
+            document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+            
+            // Add focus event handlers
+            document.addEventListener('focusin', (e) => {
+                const element = e.target;
+                if (element.hasAttribute('data-option')) {
+                    element.setAttribute('aria-selected', 'true');
+                }
+                this.handleFocusIn();
+            });
+            
+            document.addEventListener('focusout', (e) => {
+                const element = e.target;
+                if (element.hasAttribute('data-option')) {
+                    element.setAttribute('aria-selected', 'false');
+                }
+                this.handleFocusOut();
+            });
+            
+            // Add online/offline event listeners
+            window.addEventListener('online', () => this.handleOnline());
+            window.addEventListener('offline', () => this.handleOffline());
+            
+            // Add error event listener for CSP violations
+            window.addEventListener('error', (e) => {
+                if (e instanceof SecurityPolicyViolationEvent) {
+                    this.handleCSPViolation(e);
+                }
+            });
+            
+        } catch (error) {
+            console.error('Error setting up event listeners:', error);
+            this.handleError(error, 'Failed to set up event listeners');
+        }
+    },
+    /**
+     * Focuses the next option in the quiz
+     * @function
+     * @returns {void}
+     */
+    focusNextOption() {
+        const options = document.querySelectorAll('#options input[type="radio"]');
+        const currentFocus = document.querySelector('#options input[type="radio"]:checked');
+        
+        if (!currentFocus) {
+            options[0]?.focus();
+            return;
+        }
+        
+        const currentIndex = Array.from(options).indexOf(currentFocus);
+        if (currentIndex < options.length - 1) {
+            options[currentIndex + 1].focus();
+        }
+    },
+    /**
+     * Focuses the previous option in the quiz
+     * @function
+     * @returns {void}
+     */
+    focusPreviousOption() {
+        const options = document.querySelectorAll('#options input[type="radio"]');
+        const currentFocus = document.querySelector('#options input[type="radio"]:checked');
+        
+        if (!currentFocus) {
+            options[options.length - 1]?.focus();
+            return;
+        }
+        
+        const currentIndex = Array.from(options).indexOf(currentFocus);
+        if (currentIndex > 0) {
+            options[currentIndex - 1].focus();
+        }
+    },
+    /**
+     * Displays the current question
+     * @function
+     * @returns {void}
+     */
+    showQuestion() {
+        if (!this.state.currentQuestionData) return;
+
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const submitBtn = document.querySelector('button[data-action="submit"]');
+        const nextBtn = document.querySelector('button[data-action="next"]');
+
+        if (!questionElement || !optionsElement) {
+            console.error('Missing required quiz elements');
+            return;
+        }
+
+        // Track question start time
+        if (this.state.currentQuestionData) {
+            this.state.analytics.questionTimes[this.state.currentQuestionIndex] = Date.now();
+        }
+
+        // Update question display
+        questionElement.textContent = this.state.currentQuestionData.question;
+
+        // Clear previous options
+        optionsElement.innerHTML = '';
+
+        // Add new options
+        this.state.currentQuestionData.options.forEach((option, index) => {
+            const label = document.createElement('label');
+            const input = document.createElement('input');
+            const span = document.createElement('span');
+
+            input.type = 'radio';
+            input.name = 'answer';
+            input.value = option;
+            input.id = `option-${index}`;
+
+            span.textContent = option;
+
+            label.appendChild(input);
+            label.appendChild(span);
+            optionsElement.appendChild(label);
+        });
+
+        // Update UI state
+        submitBtn.disabled = false;
+        nextBtn.disabled = true;
+    },
+    /**
+     * Starts the quiz
+     * @function
+     * @returns {void}
+     */
+    startQuiz() {
+        if (!this.state.questions || this.state.questions.length === 0) {
+            console.error('No questions available for quiz');
+            return;
+        }
+
+        this.state.currentQuestionIndex = 0;
+        this.state.currentQuestionData = this.state.questions[this.state.currentQuestionIndex];
+        this.showQuestion();
+        this.startTimer();
+    },
+    /**
+     * Starts the quiz timer
+     * @function
+     * @returns {void}
+     */
+    startTimer() {
+        this.state.timer = setInterval(() => {
+            this.state.timeLimit--;
+            this.updateTimerDisplay();
+            if (this.state.timeLimit <= 0) {
+                clearInterval(this.state.timer);
+                this.submitAnswer();
+            }
+        }, 1000);
+    },
+    /**
+     * Updates the timer display
+     * @function
+     * @returns {void}
+     */
+    updateTimerDisplay() {
+        const timerDisplay = document.getElementById('timer');
+        if (timerDisplay) {
+            timerDisplay.textContent = `Time remaining: ${this.state.timeLimit}s`;
+        }
+    },
+    /**
+     * Handles option selection
+     * @function
+     * @param {string} selectedOption - The selected answer option
+     * @returns {void}
+     */
+    handleOptionClick(selectedOption) {
+        const options = document.querySelectorAll('#options input[type="radio"]');
+        options.forEach(option => {
+            if (option.value === selectedOption) {
+                option.checked = true;
+            }
+        });
+    },
+    /**
+     * Submits the selected answer
+     * @function
+     * @returns {void}
+     */
+    submitAnswer() {
+        const selectedOption = document.querySelector('#options input[type="radio"]:checked');
+        if (selectedOption && selectedOption.value === this.state.currentQuestionData.correctAnswer) {
+            this.state.score.correct++;
+        } else {
+            this.state.score.wrong++;
+        }
+        this.nextQuestion();
+    },
+    /**
+     * Moves to the next question
+     * @function
+     * @returns {void}
+     */
+    nextQuestion() {
+        const nextBtn = this.state.elements.buttons.next;
+        const optionsElement = document.getElementById('options');
+
+        if (!nextBtn || !optionsElement) return;
+
+        // Reset UI
+        nextBtn.disabled = true;
+        optionsElement.innerHTML = '';
+
+        // Move to next question
+        this.state.currentQuestionIndex++;
+
+        // Check if quiz is complete
+        if (this.state.currentQuestionIndex >= this.state.questions.length) {
+            this.endQuiz();
+            return;
+        }
+
+        // Show next question
+        this.state.currentQuestionData = this.state.questions[this.state.currentQuestionIndex];
+        this.showQuestion();
+    },
+    /**
+     * Ends the quiz and shows results
+     * @function
+     * @returns {void}
+     */
+    endQuiz() {
+        const quizSection = document.getElementById('quiz');
+        if (quizSection) {
+            quizSection.innerHTML = `
+                <h2>Quiz Results</h2>
+                <p>Your score: ${this.state.score.correct}/${this.state.questions.length}</p>
+                <button onclick="JAPVOC.Quiz.initialize()">Retry Quiz</button>
+            `;
+        }
+    },
+    /**
+     * Shows a hint for the current question
+     * @function
+     * @returns {void}
+     */
+    showHint() {
+        const hint = this.state.currentQuestionData.hint || 'No hint available';
+        const hintElement = document.getElementById('quiz-hint-text');
+        const hintButton = this.state.elements.buttons.hint;
+        
+        if (hintElement && hintButton) {
+            // Track hint usage
+            this.state.analytics.hintUsage++;
+            this.trackEvent('hint_used', {
+                questionIndex: this.state.currentQuestionIndex,
+                hint: hint
+            });
+            
+            // Add fade animation
+            hintElement.classList.add('fade-in');
+            hintElement.textContent = hint;
+            hintElement.style.display = 'block';
+            hintButton.disabled = true;
+            
+            // Hide hint with animation
+            setTimeout(() => {
+                hintElement.classList.remove('fade-in');
+                hintElement.classList.add('fade-out');
+                setTimeout(() => {
+                    hintElement.style.display = 'none';
+                    hintElement.classList.remove('fade-out');
+                    hintButton.disabled = false;
+                }, 300);
+            }, 5000);
+        }
+    },
+    selectOption(index) {
+        const selectedOption = this.state.currentQuestionData.options[index];
+        const correctAnswer = this.state.currentQuestionData.correctAnswer;
+        const options = document.querySelectorAll('[data-option]');
+        
+        // Track option selection
+        this.trackEvent('option_selected', {
+            questionIndex: this.state.currentQuestionIndex,
+            selectedOption: index,
+            correct: selectedOption === correctAnswer
+        });
+        
+        // Apply visual feedback
+        options.forEach((option, i) => {
+            if (i === index) {
+                option.classList.add(selectedOption === correctAnswer ? 'correct' : 'wrong');
+            } else if (option.textContent === correctAnswer) {
+                option.classList.add('correct');
+            }
+        });
+        
+        // Update score with animation
+        const scoreElement = this.state.elements.score;
+        if (scoreElement) {
+            scoreElement.classList.add('score-animation');
+            setTimeout(() => {
+                scoreElement.classList.remove('score-animation');
+            }, 500);
+        }
+        
+        // Update score
+        if (selectedOption === correctAnswer) {
+            this.state.score.correct++;
+        } else {
+            this.state.score.wrong++;
+        }
+        
+        // Track time taken for question
+        if (this.state.currentQuestionData) {
+            const timeTaken = Date.now() - this.state.analytics.questionTimes[this.state.currentQuestionIndex];
+            this.state.analytics.questionTimes[this.state.currentQuestionIndex] = timeTaken;
+        }
+        
+        // Save progress
+        this.saveState();
+        
+        // Update UI with feedback
+        this.updateUI();
+        
+        // Wait for feedback animation
+        setTimeout(() => {
+            // Show next question
+            this.nextQuestion();
+        }, 1000);
+    },
+    handleKeyboard(e) {
+        const question = document.getElementById('question');
+        const options = document.querySelectorAll('[data-option]');
+        const hintBtn = document.getElementById('quiz-hint');
+        const submitBtn = document.querySelector('button[data-action="submit"]');
+        const nextBtn = document.querySelector('button[data-action="next"]');
+
+        switch(e.key) {
+            case 'Tab':
+                e.preventDefault();
+                this.focusNextOption();
+                break;
+            case 'Shift':
+                e.preventDefault();
+                this.focusPreviousOption();
+                break;
+            case 'Enter':
+                if (submitBtn && !submitBtn.disabled) {
+                    this.submitAnswer();
+                } else if (nextBtn && !nextBtn.disabled) {
+                    this.nextQuestion();
+                }
+                break;
+            case 'Escape':
+                this.showHint();
+                break;
+            case 'Space':
+                if (hintBtn && !hintBtn.disabled) {
+                    this.showHint();
+                }
+                break;
+        }
+    },
+    
+    handleFocusIn() {
+        const question = document.getElementById('question');
+        if (question) {
+            question.setAttribute('tabindex', '-1');
+            question.setAttribute('aria-label', 'Current question');
+            question.setAttribute('aria-live', 'polite');
+            question.focus();
+        }
+    },
+
+    handleFocusOut() {
+        const question = document.getElementById('question');
+        if (question) {
+            question.removeAttribute('tabindex');
+            question.removeAttribute('aria-live');
+        }
+    },
+    
+    announce(message, type = 'polite') {
+        const liveRegion = document.getElementById('quiz-live-region');
+        if (liveRegion) {
+            liveRegion.textContent = message;
+            liveRegion.setAttribute('aria-live', type);
+            liveRegion.setAttribute('aria-atomic', 'true');
+            setTimeout(() => {
+                liveRegion.removeAttribute('aria-live');
+                liveRegion.removeAttribute('aria-atomic');
+            }, 1000);
+        }
+    },
+    
+    updateUI() {
+        try {
+            // Debounce UI updates
+            if (this.state.updateTimer) {
+                clearTimeout(this.state.updateTimer);
+            }
+            this.state.updateTimer = setTimeout(() => {
+                // Handle loading state
+                if (this.state.isLoading) {
+                    const loadingElements = document.querySelectorAll('[data-loading]');
+                    loadingElements.forEach(el => {
+                        el.classList.add('loading');
+                        el.setAttribute('aria-busy', 'true');
+                        el.setAttribute('aria-label', 'Loading content');
+                    });
+                    return;
+                }
+
+                // Handle error state
+                if (this.state.hasError) {
+                    const errorContainer = document.getElementById('quiz-error');
+                    if (errorContainer) {
+                        errorContainer.textContent = this.state.errorMessage;
+                        errorContainer.style.display = 'block';
+                        errorContainer.setAttribute('aria-live', 'assertive');
+                        errorContainer.setAttribute('role', 'alert');
+                        errorContainer.setAttribute('aria-label', 'Error: ' + this.state.errorMessage);
+                    }
+                    return;
+                }
+
+                // Update question display
+                const question = this.state.elements.question;
+                if (!question) {
+                    console.error('Question element not found');
+                    return;
+            }
+            
+            // Update score
+            const score = document.getElementById('quizScore');
+            if (score) {
+                score.textContent = `Correct: ${this.state.correctAnswers} | Wrong: ${this.state.wrongAnswers}`;
+                score.setAttribute('aria-live', 'polite');
+                score.setAttribute('role', 'status');
+            }
+            
+            // Update buttons
+            const nextButton = document.getElementById('nextQuestion');
+            const hintButton = document.getElementById('quiz-hint');
+            const startButton = document.getElementById('startQuiz');
+            const homeButton = document.getElementById('quiz-home');
+            
+            if (nextButton) {
+                const isLastQuestion = this.state.currentQuestion >= this.state.questions[this.state.category].length - 1;
+                nextButton.disabled = isLastQuestion;
+                nextButton.textContent = isLastQuestion ? 'Finish Quiz' : 'Next Question';
+                nextButton.classList.toggle('disabled', isLastQuestion);
+                nextButton.setAttribute('aria-label', isLastQuestion ? 'Finish quiz' : 'Go to next question');
+                nextButton.setAttribute('role', 'button');
+                nextButton.setAttribute('tabindex', '0');
+                
+                // Add vibration class
+                if (!nextButton.classList.contains('vibration-enabled')) {
+                    nextButton.classList.add('vibration-enabled');
+                }
+            }
+            
+            if (hintButton) {
+                hintButton.style.display = this.state.currentQuestionData.hint ? 'block' : 'none';
+                hintButton.classList.remove('loading');
+                hintButton.setAttribute('aria-label', 'Show hint for current question');
+                hintButton.setAttribute('role', 'button');
+                hintButton.setAttribute('tabindex', '0');
+                
+                // Add vibration class
+                if (!hintButton.classList.contains('vibration-enabled')) {
+                    hintButton.classList.add('vibration-enabled');
+                }
+            }
+            
+            if (startButton) {
+                startButton.disabled = this.state.currentQuestion !== 0;
+                startButton.classList.toggle('disabled', this.state.currentQuestion !== 0);
+                startButton.setAttribute('aria-label', 'Start new quiz');
+                startButton.setAttribute('role', 'button');
+                startButton.setAttribute('tabindex', '0');
+                
+                // Add vibration class
+                if (!startButton.classList.contains('vibration-enabled')) {
+                    startButton.classList.add('vibration-enabled');
+                }
+            }
+            
+            if (homeButton) {
+                homeButton.classList.remove('loading');
+                homeButton.setAttribute('aria-label', 'Return to welcome page');
+                homeButton.setAttribute('role', 'button');
+                homeButton.setAttribute('tabindex', '0');
+                
+                // Add vibration class
+                if (!homeButton.classList.contains('vibration-enabled')) {
+                    homeButton.classList.add('vibration-enabled');
+                }
+            }
+            
+            // Set focus order
+            const focusableButtons = [startButton, nextButton, hintButton, homeButton].filter(Boolean);
+            focusableButtons.forEach((button, index) => {
+                button.tabIndex = index;
+            });
+        } catch (error) {
+            this.handleError(error, 'Error updating UI');
+        }
+    },
+    
+    handleError(error, message) {
+        this.state.hasError = true;
+        this.state.errorMessage = message || 'An error occurred';
+        console.error(this.state.errorMessage, error);
+        
+        // Attempt to retry if we haven't exceeded max retries
+        if (this.state.retryCount < this.state.maxRetries) {
+            this.state.retryCount++;
+            setTimeout(() => {
+                this.state.hasError = false;
+                this.state.retryCount = 0;
+                this.loadQuizData();
+            }, 2000); // Wait 2 seconds before retrying
+        }
+    },
+    /**
+     * Dictionary module handles vocabulary lookup and management
+     * @namespace
+     */
+    Dictionary: {
+        state: {
+            initialized: false,
+            searchResults: [],
+            currentSearch: '',
+            wordBank: {
+                // Basic Vocabulary
+                'basic': [
+                    { japanese: 'こんにちは', romaji: 'konnichiwa', meaning: 'Hello', type: 'greeting' },
+                    { japanese: 'ありがとう', romaji: 'arigatou', meaning: 'Thank you', type: 'expression' },
+                    { japanese: 'はい', romaji: 'hai', meaning: 'Yes', type: 'response' },
+                    { japanese: 'いいえ', romaji: 'iie', meaning: 'No', type: 'response' },
+                    { japanese: 'すみません', romaji: 'sumimasen', meaning: 'Excuse me', type: 'expression' },
+                    { japanese: 'おはよう', romaji: 'ohayou', meaning: 'Good morning', type: 'greeting' },
+                    { japanese: 'おやすみなさい', romaji: 'oyasuminasai', meaning: 'Good night', type: 'greeting' }
+                ],
+                // Food & Drink
+                'food': [
+                    { japanese: 'ごはん', romaji: 'gohan', meaning: 'Rice', type: 'food' },
+                    { japanese: 'パン', romaji: 'pan', meaning: 'Bread', type: 'food' },
+                    { japanese: 'みず', romaji: 'mizu', meaning: 'Water', type: 'drink' },
+                    { japanese: 'おちゃ', romaji: 'ocha', meaning: 'Tea', type: 'drink' },
+                    { japanese: 'コーヒー', romaji: 'koohii', meaning: 'Coffee', type: 'drink' },
+                    { japanese: 'さかな', romaji: 'sakana', meaning: 'Fish', type: 'food' },
+                    { japanese: 'にく', romaji: 'niku', meaning: 'Meat', type: 'food' },
+                    { japanese: 'やさい', romaji: 'yasai', meaning: 'Vegetables', type: 'food' }
+                ],
+                // Numbers
+                'numbers': [
+                    { japanese: 'いち', romaji: 'ichi', meaning: 'One', type: 'number' },
+                    { japanese: 'に', romaji: 'ni', meaning: 'Two', type: 'number' },
+                    { japanese: 'さん', romaji: 'san', meaning: 'Three', type: 'number' },
+                    { japanese: 'し', romaji: 'shi', meaning: 'Four', type: 'number' },
+                    { japanese: 'ご', romaji: 'go', meaning: 'Five', type: 'number' },
+                    { japanese: 'ろく', romaji: 'roku', meaning: 'Six', type: 'number' },
+                    { japanese: 'なな', romaji: 'nana', meaning: 'Seven', type: 'number' },
+                    { japanese: 'はち', romaji: 'hachi', meaning: 'Eight', type: 'number' },
+                    { japanese: 'きゅう', romaji: 'kyuu', meaning: 'Nine', type: 'number' },
+                    { japanese: 'じゅう', romaji: 'juu', meaning: 'Ten', type: 'number' }
+                ],
+                // Time & Date
+                'time': [
+                    { japanese: 'あさ', romaji: 'asa', meaning: 'Morning', type: 'time' },
+                    { japanese: 'ひる', romaji: 'hiru', meaning: 'Afternoon', type: 'time' },
+                    { japanese: 'よる', romaji: 'yoru', meaning: 'Night', type: 'time' },
+                    { japanese: 'にちようび', romaji: 'nichiyoubi', meaning: 'Sunday', type: 'day' },
+                    { japanese: 'げつようび', romaji: 'getsuyoubi', meaning: 'Monday', type: 'day' },
+                    { japanese: 'かようび', romaji: 'kayoubi', meaning: 'Tuesday', type: 'day' },
+                    { japanese: 'すいようび', romaji: 'suiyoubi', meaning: 'Wednesday', type: 'day' },
+                    { japanese: 'もくようび', romaji: 'mokuyoubi', meaning: 'Thursday', type: 'day' },
+                    { japanese: 'きんようび', romaji: 'kinyoubi', meaning: 'Friday', type: 'day' },
+                    { japanese: 'どようび', romaji: 'doyoubi', meaning: 'Saturday', type: 'day' }
+                ],
+                // Family & Relationships
+                'family': [
+                    { japanese: 'おかあさん', romaji: 'okaasan', meaning: 'Mother', type: 'family' },
+                    { japanese: 'おとうさん', romaji: 'otousan', meaning: 'Father', type: 'family' },
+                    { japanese: 'あね', romaji: 'ane', meaning: 'Older sister', type: 'family' },
+                    { japanese: 'あに', romaji: 'ani', meaning: 'Older brother', type: 'family' },
+                    { japanese: 'いもうと', romaji: 'imouto', meaning: 'Younger sister', type: 'family' },
+                    { japanese: 'おとうと', romaji: 'otouto', meaning: 'Younger brother', type: 'family' },
+                    { japanese: 'はは', romaji: 'haha', meaning: 'Grandmother', type: 'family' },
+                    { japanese: 'おじいさん', romaji: 'ojiisan', meaning: 'Grandfather', type: 'family' }
+                ],
+                // Basic Verbs
+                'verbs': [
+                    { japanese: 'たべる', romaji: 'taberu', meaning: 'To eat', type: 'verb' },
+                    { japanese: 'のむ', romaji: 'nomu', meaning: 'To drink', type: 'verb' },
+                    { japanese: 'いく', romaji: 'iku', meaning: 'To go', type: 'verb' },
+                    { japanese: 'くる', romaji: 'kuru', meaning: 'To come', type: 'verb' },
+                    { japanese: 'する', romaji: 'suru', meaning: 'To do', type: 'verb' },
+                    { japanese: 'みる', romaji: 'miru', meaning: 'To see', type: 'verb' },
+                    { japanese: 'きく', romaji: 'kiku', meaning: 'To listen', type: 'verb' },
+                    { japanese: 'かく', romaji: 'kaku', meaning: 'To write', type: 'verb' }
+                ],
+                // Adjectives
+                'adjectives': [
+                    { japanese: 'たかい', romaji: 'takai', meaning: 'High/tall', type: 'adjective' },
+                    { japanese: 'ひくい', romaji: 'hikui', meaning: 'Low/short', type: 'adjective' },
+                    { japanese: 'あつい', romaji: 'atsui', meaning: 'Hot', type: 'adjective' },
+                    { japanese: 'さむい', romaji: 'samui', meaning: 'Cold', type: 'adjective' },
+                    { japanese: 'おおきい', romaji: 'ookii', meaning: 'Big/large', type: 'adjective' },
+                    { japanese: 'ちいさい', romaji: 'chiisai', meaning: 'Small', type: 'adjective' },
+                    { japanese: 'あかい', romaji: 'akai', meaning: 'Red', type: 'adjective' },
+                    { japanese: 'あおい', romaji: 'aoi', meaning: 'Blue', type: 'adjective' }
+                ],
+                // Kana Practice (Only for Kana testing)
+                'kana': [
+                    // Hiragana
+                    { kana: 'あ', romaji: 'a', type: 'hiragana' },
+                    { kana: 'い', romaji: 'i', type: 'hiragana' },
+                    { kana: 'う', romaji: 'u', type: 'hiragana' },
+                    { kana: 'え', romaji: 'e', type: 'hiragana' },
+                    { kana: 'お', romaji: 'o', type: 'hiragana' },
+                    { kana: 'か', romaji: 'ka', type: 'hiragana' },
+                    { kana: 'き', romaji: 'ki', type: 'hiragana' },
+                    { kana: 'く', romaji: 'ku', type: 'hiragana' },
+                    { kana: 'け', romaji: 'ke', type: 'hiragana' },
+                    { kana: 'こ', romaji: 'ko', type: 'hiragana' },
+                    // Katakana
+                    { kana: 'ア', romaji: 'a', type: 'katakana' },
+                    { kana: 'イ', romaji: 'i', type: 'katakana' },
+                    { kana: 'ウ', romaji: 'u', type: 'katakana' },
+                    { kana: 'エ', romaji: 'e', type: 'katakana' },
+                    { kana: 'オ', romaji: 'o', type: 'katakana' },
+                    { kana: 'カ', romaji: 'ka', type: 'katakana' },
+                    { kana: 'キ', romaji: 'ki', type: 'katakana' },
+                    { kana: 'ク', romaji: 'ku', type: 'katakana' },
+                    { kana: 'ケ', romaji: 'ke', type: 'katakana' },
+                    { kana: 'コ', romaji: 'ko', type: 'katakana' }
+                ]
+            const searchButton = document.getElementById('dictionary-search-button');
+            const searchInput = document.getElementById('dictionary-search-input');
+
+            if (searchButton) {
+                searchButton.addEventListener('click', () => this.search());
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.search();
+                    }
+                });
+            }
+        },
+        search() {
+            const searchTerm = document.getElementById('dictionary-search-input').value.toLowerCase();
+            this.state.currentSearch = searchTerm;
+            
+            // Get all dictionary entries
+            const entries = document.querySelectorAll('.dictionary-entry');
+            
+            // Filter and show results
+            entries.forEach(entry => {
+                const text = entry.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    entry.style.display = 'block';
+                } else {
+                    entry.style.display = 'none';
+                }
+            });
+        }
+    },
+    Listening: {
+        state: {
+            initialized: false
+        },
+        loadListeningContent() {
+            console.log('Listening module not implemented yet.');
+        }
+    },
+    Progress: {
+        state: {
+            initialized: false
+        },
+        renderProgress() {
+            console.log('Progress module not implemented yet.');
+        }
+    },
+    Flashcards: {
+        state: {
+            initialized: false
+        },
+        handleFlashcards: function() {
+            const flashcardButtons = document.querySelectorAll('.flashcard-button');
+            flashcardButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const action = button.dataset.action;
+                    // TODO: Implement flashcard logic
+                });
+            });
+        }
+    },
+    Kanji: {
+        state: {
+            initialized: false
+        },
+        handleKanji: function() {
+            const kanjiButtons = document.querySelectorAll('.kanji-button');
+            kanjiButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const action = button.dataset.action;
+                    // TODO: Implement kanji logic
+                });
+            });
+        }
+    },
+    Listening: {
+        state: {
+            initialized: false
+        },
+        handleListening: function() {
+            const listeningButtons = document.querySelectorAll('.listening-button');
+            listeningButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const action = button.dataset.action;
+                    // TODO: Implement listening logic
+                });
+            });
+        }
+    },
+    /**
+     * Grammar module handles grammar learning and practice
+     * @namespace
+     */
+    Grammar: {
+        state: {
+            initialized: false,
+            currentTopic: null,
+            topics: {
+                'particles': {
+                    title: 'Particles',
+                    description: 'Learn Japanese particles and their usage',
+                    content: [
+                        { id: 1, title: 'は vs が', content: 'は is used for topics, が for subjects' },
+                        { id: 2, title: 'を', content: 'Used with verbs to indicate direct objects' },
+                        { id: 3, title: 'に', content: 'Used for direction or time' },
+                        { id: 4, title: 'で', content: 'Used for location of action' }
+                    ]
+                },
+                'verbs': {
+                    title: 'Verbs',
+                    description: 'Learn Japanese verb forms and conjugations',
+                    content: [
+                        { id: 5, title: 'て-form', content: 'Used for connecting actions' },
+                        { id: 6, title: 'ます-form', content: 'Polite form of verbs' },
+                        { id: 7, title: 'た-form', content: 'Past tense' },
+                        { id: 8, title: 'ない-form', content: 'Negative form' }
+                    ]
+                },
+                'adjectives': {
+                    title: 'Adjectives',
+                    description: 'Learn Japanese adjectives and their usage',
+                    content: [
+                        { id: 9, title: 'い-adjectives', content: 'End in い, change to く for て-form' },
+                        { id: 10, title: 'な-adjectives', content: 'End in な, use な before nouns' },
+                        { id: 11, title: 'Comparatives', content: 'Use より for comparisons' },
+                        { id: 12, title: 'Superlatives', content: 'Use 一番 for superlatives' }
+                    ]
+                }
+            }
+        },
+        handleTopics() {
+            const topicButtons = document.querySelectorAll('.grammar-topic');
+            topicButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const topic = button.dataset.topic;
+                    this.showTopic(topic);
+                });
+            });
+        },
+        showTopic(topic) {
+            this.state.currentTopic = topic;
+            const content = this.state.topics[topic].content;
+            const container = document.getElementById('grammar-content');
+            
+            if (container) {
+                container.innerHTML = `
+                    <div class="topic-header">
+                        <h2>${this.state.topics[topic].title}</h2>
+                        <p>${this.state.topics[topic].description}</p>
+                    </div>
+                    <div class="topic-content">
+                        ${this.renderContent(content)}
+                    </div>
+                `;
+            }
+        },
+        renderContent(items) {
+            return `
+                <div class="content">
+                    ${items.map(item => `
+                        <div class="item">
+                            <h3>${item.title}</h3>
+                            <p>${item.content}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+    },
+    initialize() {
+        try {
+            console.log('Initializing JapVoc');
+            
+            // Check for required elements
+            const requiredElements = [
+                'welcome-page',
+                'quiz-container',
+                'dictionary-container',
+                'grammar-container',
+                'progress-container',
+                'flashcards-container',
+                'kanji-container',
+                'listening-container'
+            ];
+
+            const missingElements = requiredElements.filter(element => !document.getElementById(element));
+            if (missingElements.length > 0) {
+                console.error(`Missing required elements: ${missingElements.join(', ')}`);
+                return false;
+            }
+
+            // Initialize modules
+            Object.values(JAPVOC).forEach(module => {
+                if (module && module.initialize && typeof module.initialize === 'function') {
+                    module.initialize();
+                }
+            });
+
+            // Show welcome page
+            JAPVOC.UI.showWelcome();
+            return true;
+        } catch (error) {
+            console.error('Error during initialization:', error);
+            return false;
+        }
+    }
+{{ ... }}
+
+// Function to generate README content from current state
+const generateReadme = async () => {
+    try {
+        // Get current features from UI
+        const features = [
+            'Interactive Quizzes: Test your knowledge with quizzes that adapt to your learning level',
+            'Flashcards: Practice vocabulary with flashcards that allow you to flip and review words',
+            'Dictionary: Search for Japanese words and their meanings, along with example sentences',
+            'Grammar Lessons: Learn essential grammar rules and their applications in the Japanese language',
+            'Progress Tracking: Monitor your learning progress and achievements over time'
+        ];
+
+        // Get available sections from UI
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(section => {
+            const sectionName = section.getAttribute('data-section');
+            if (sectionName && !features.includes(sectionName)) {
+                features.push(`${sectionName}: ${section.querySelector('h2')?.textContent || 'New feature section'}`);
+            }
+        });
+
+        // Generate README content
+        const readmeContent = `# JAPVOC - Japanese Vocabulary Learning Application
+
+## Overview
+JAPVOC is a web-based application designed to help users learn Japanese vocabulary through various interactive methods. The application is built using HTML, CSS, and JavaScript, and is optimized for both desktop and mobile devices.
+
+## Features
+${features.map(f => `- ${f}`).join('\n')}
+
+## Technologies Used
+- HTML5: For structuring the content
+- CSS3: For styling and responsive design
+- JavaScript: For interactivity and dynamic content
+- Web APIs:
+  - Local Storage: For saving user progress
+  - Intersection Observer: For lazy loading images
+  - Web Audio API: For audio playback
+  - Canvas API: For Kanji stroke order practice
+
+## Current Features
+${Array.from(document.querySelectorAll('.section')).map(section => 
+    `- ${section.getAttribute('data-section')}: ${section.querySelector('h2')?.textContent || 'New section'}`
+).join('\n')}
+
+## Last Updated: ${new Date().toISOString()}
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+- Special thanks to the open-source community
+- Japanese language learning resources
+- Font providers for Noto Sans JP
+- All contributors who have helped improve this project`;
+
+        // Write to README.md
+        const blob = new Blob([readmeContent], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'README.md';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        console.log('README.md generated successfully');
+    } catch (error) {
+        console.error('Error generating README:', error);
+    }
+};
+
+// Initialize the app when the DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    JAPVOC.initialize();
+    generateReadme(); // Generate README on load
+});
+
+</script>
+</body>
+</html>
+
